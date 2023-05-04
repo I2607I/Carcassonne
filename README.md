@@ -1,3 +1,3 @@
 # Carcassonne
-to tun
+to run
 python3 main.py
