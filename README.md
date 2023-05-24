@@ -1,6 +1,6 @@
 # Carcassonne
 - to run
-'python3 main.py'
+`python3 main.py`
 - игра Carcasson
 - python pyQt6
 
