@@ -11,3 +11,5 @@
 <img src="images/readme1.png" title="Поле почти заполнено" width="50%" height="50%" />
 - Начальный этап выкладывания фишек
 <img src="images/readme2.png" title="Начальный этап выкладывания фишек" width="50%" height="50%" />
+- А вот получилась совсем другая картина
+<img src="images/readme2.png" title="Начальный этап выкладывания фишек" width="50%" height="50%" />
