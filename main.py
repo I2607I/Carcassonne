@@ -1,5 +1,4 @@
 import sys
-import os
 import copy
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QGridLayout, QLabel, QVBoxLayout, QStackedLayout
 from PyQt6.QtGui import QPalette, QColor, QPixmap, QIcon, QCursor, QPainter, QFont, QPolygonF, QTransform
@@ -41,7 +40,6 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("My App")
         # self.setFixedWidth(1500)
         # self.setFixedHeight(750)
-
         self.feature = False
         self.cur = QCursor()
         self.first_feature_river = [1]
@@ -197,56 +195,15 @@ class MainWindow(QMainWindow):
         main_widget = QWidget()
         main_widget.setLayout(layout_main)
 
-        # menu = QLabel()
-        # menu.setPixmap(QPixmap("images/castle1.jpg").scaled((M+2)*100, (N+2)*100))
-        # menu.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)
-
         menu2 = QVBoxLayout()
         menu2_widget = QWidget()
         menu2_widget.setLayout(menu2)
         menu2_widget.setStyleSheet("border-image: url(images/castle1.jpg);")
-        up_b = QPushButton()
-        up_b.setMinimumSize(QtCore.QSize((M+2)*100, int((N+2)*100*0.6)))
-        up_b.setMaximumSize(QtCore.QSize((M+2)*100, int((N+2)*100*0.6)))
-        up_b.setStyleSheet("QPushButton {background-color: rgb(32,154,22); border-image: url(image/s); color: White; border-radius: 600px;}")
-        middle_b = QWidget()
-        middle_layout = QHBoxLayout()
-
-        left_b = QPushButton()
-        left_b.setMinimumSize(QtCore.QSize(int((M+2)*100*0.1), int((N+2)*100*0.1)))
-        left_b.setMaximumSize(QtCore.QSize(int((M+2)*100*0.1), int((N+2)*100*0.1)))
-        left_b.setStyleSheet("QPushButton {background-color: rgb(32,154,22); border-image: url(image/s); color: White; border-radius: 600px;}")
-        main_b = QPushButton()
-        main_b.setMinimumSize(QtCore.QSize(int((M+2)*100*0.2), int((N+2)*100*0.1)))
-        main_b.setMaximumSize(QtCore.QSize(int((M+2)*100*0.2), int((N+2)*100*0.1)))
-        right_b = QPushButton()
-        right_b.setMinimumSize(QtCore.QSize(int((M+2)*100*0.7), int((N+2)*100*0.1)))
-        right_b.setMaximumSize(QtCore.QSize(int((M+2)*100*0.7), int((N+2)*100*0.1)))
-        right_b.setStyleSheet("QPushButton {background-color: rgb(32,154,22); border-image: url(image/s); color: White; border-radius: 600px;}")
-
-        middle_layout.addWidget(left_b)
-        middle_layout.addWidget(main_b)
-        middle_layout.addWidget(right_b)
-        middle_layout.setSpacing(0)
-
-        middle_b.setLayout(middle_layout)
-        middle_b.setStyleSheet(" border-image: url(image/s); color: White; border-radius: 600px;")
-
-        down_b = QPushButton()
-        down_b.setMinimumSize(QtCore.QSize((M+2)*100, int((N+2)*100*0.3)))
-        down_b.setMaximumSize(QtCore.QSize((M+2)*100, int((N+2)*100*0.3)))
-        down_b.setStyleSheet("QPushButton {background-color: rgb(32,154,22); border-image: url(image/s); color: White; border-radius: 600px;}")
-
-
-        menu2.addWidget(up_b)
-        menu2.addWidget(middle_b)
-        menu2.addWidget(down_b)
-        menu2.setSpacing(0)
         
         stack_layout = QStackedLayout()
         stack_layout.addWidget(main_widget)
         stack_layout.addWidget(menu2_widget)
-        stack_layout.setCurrentIndex(1)
+        stack_layout.setCurrentIndex(0)
 
         widget = QWidget()
         widget.setLayout(stack_layout)
@@ -261,12 +218,9 @@ class MainWindow(QMainWindow):
 
 
     def click_button(self, i, j=(0,0)):
-        # print('i', i)
-        # print('j', j)
         i, j = j
         button = self.sender()
         if button.objectName() == 'logo' and self.feature == False:
-            print('logo')
             if len(self.first_feature_river) > 0:
                 self.index = choice(self.first_feature_river)
                 self.first_feature_river.remove(self.index)
@@ -336,72 +290,61 @@ class MainWindow(QMainWindow):
             self.cur = QCursor(pix)
             QApplication.restoreOverrideCursor()
             QApplication.setOverrideCursor(self.cur)
-            print('first',self.object.left, self.object.up, self.object.right, self.object.down)
-            print([self.object.left, self.object.up, self.object.right, self.object.down][3:]+
-                [self.object.left, self.object.up, self.object.right, self.object.down][:3])
             new_lurd = ([self.object.left, self.object.up, self.object.right, self.object.down][3:]+
                 [self.object.left, self.object.up, self.object.right, self.object.down][:3])
-            self.object.left, self.object.up, self.object.right, self.object.down = new_lurd[0], new_lurd[1], new_lurd[2], new_lurd[3]
-        elif button.objectName() == '' and self.feature == True and (i+self.shifti, j+self.shiftj) not in self.list_features_on_map:
-            print('f', button.objectName())
-            print('not logo')
-            i+=self.shifti
-            j+=self.shiftj
-            print(i, j)
+            self.object.left, self.object.up = new_lurd[0], new_lurd[1]
+            self.object.right, self.object.down = new_lurd[2], new_lurd[3]
+        elif ((i+self.shifti, j+self.shiftj) not in self.list_features_on_map
+                and button.objectName() == '' and self.feature is True):
+            i += self.shifti
+            j += self.shiftj
             flag = True
-            print('!!!!!!!!!!!!!!!!',self.object.left, self.object.up, self.object.right, self.object.down)
-            if self.map[i][j+1] != 0 or self.map[i][j-1] != 0 or self.map[i - 1][j] != 0 or self.map[i + 1][j] != 0 or self.first_feature == True:
-                print('check')
-                # self.object.printf()
-                if self.map[i][j+1] !=0:
-                    print('left', self.map[i][j+1].left)
+            if (self.map[i][j+1] != 0 or self.map[i][j-1] != 0
+                    or self.map[i - 1][j] != 0
+                    or self.map[i + 1][j] != 0 or self.first_feature is True):
+                if self.map[i][j+1] != 0:
                     if self.map[i][j+1].left != self.object.right:
                         flag = False
-                if self.map[i][j-1] !=0:
-                    print('right',self.map[i][j-1].right)
+                if self.map[i][j-1] != 0:
                     if self.map[i][j-1].right != self.object.left:
                         flag = False
-                if self.map[i+1][j] !=0:
-                    print('up',self.map[i+1][j].up)
+                if self.map[i+1][j] != 0:
                     if self.map[i+1][j].up != self.object.down:
                         flag = False
-                if self.map[i-1][j] !=0:
-                    print('down', self.map[i-1][j].down)
+                if self.map[i-1][j] != 0:
                     if self.map[i-1][j].down != self.object.up:
                         flag = False
                 count_river = 0
-                if self.first_feature == False:
+                if self.first_feature is False:
                     if self.object.left == 'river':
                         if self.map[i][j-1] == 0:
-                            count_river +=1
+                            count_river += 1
                         elif self.map[i][j-1].right != 'river':
-                            count_river +=1
+                            count_river += 1
                     if self.object.right == 'river':
                         if self.map[i][j+1] == 0:
-                            count_river +=1
+                            count_river += 1
                         elif self.map[i][j+1].left != 'river':
-                            count_river +=1
+                            count_river += 1
                     if self.object.up == 'river':
                         if self.map[i-1][j] == 0:
-                            count_river +=1
+                            count_river += 1
                         elif self.map[i-1][j].down != 'river':
-                            count_river +=1  
+                            count_river += 1
                     if self.object.down == 'river':
-                        print(123)
                         if self.map[i+1][j] == 0:
-                            count_river +=1
+                            count_river += 1
                         elif self.map[i+1][j].up != 'river':
-                            count_river +=1
+                            count_river += 1
                 if count_river > 1:
                     flag = False
-                if flag == True:
+                if flag is True:
                     t = QTransform().rotate(90*self.object.turn)
                     pix = QPixmap(self.object.image).transformed(t)
                     button.setIcon(QIcon(pix))
                     button.setIconSize(QtCore.QSize(100, 100))
                     self.sound_set.play()
                     QApplication.restoreOverrideCursor()
-                    # self.map[i][j] = button
                     self.list_features_on_map.append((i, j))
                     self.map[i][j] = self.object
                     self.feature = False
@@ -411,24 +354,10 @@ class MainWindow(QMainWindow):
             else:
                 self.sound_fail.play()
 
-
-
-
-
-
-
     def paintEvent(self, paintEvent):
         paint = QPainter(self)
-        sky_image = QPixmap(f'images/sky.png').scaled(1750, 225)
+        sky_image = QPixmap('images/sky.png').scaled(1750, 225)
         paint.drawPixmap(self.rect(), sky_image)
-
-
-
-
-
-
-
-
 
 
 app = QApplication(sys.argv)
@@ -438,10 +367,3 @@ window.show()
 
 app.exec()
 
-a = Feature(0, 'road', 0, 'road')
-b = copy.deepcopy(a)
-b.turnl()
-
-
-a.printf()
-b.printf()
