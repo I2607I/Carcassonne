@@ -1,6 +1,6 @@
 # Carcassonne
 - stack
-`python pyQt6`
+`pyQt6`
 - to run
 `python3 main.py`
 
